@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest android:versionCode="1000"
+    android:versionName="1.0"
+    package="com.android.vending.updater"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="8" />
+
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
+    <uses-permission android:name="com.android.vending.permission.UPDATE_MARKET_FAILURE" />
+    <permission
+        android:label="@string/permission_label_update_market"
+        android:name="com.android.vending.permission.UPDATE_MARKET"
+        android:protectionLevel="signature" />
+    <application android:label="@string/application_name">
+        <receiver android:name=".UpdateMarketReceiver"
+            android:permission="com.android.vending.permission.UPDATE_MARKET">
+            <intent-filter>
+                <action android:name="com.android.vending.UPDATE_MARKET" />
+                <data android:mimeType="vnd.android.cursor.item/download" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>
+

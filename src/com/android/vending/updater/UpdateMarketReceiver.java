@@ -1,3 +1,19 @@
+/*
+**
+** Copyright 2011, lytsing.org
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
 package com.android.vending.updater;
 
 import android.content.BroadcastReceiver;
@@ -13,7 +29,8 @@ public class UpdateMarketReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Uri contentUri = intent.getData();
-        context.getPackageManager().installPackage(contentUri, new InstallObserver(context), 2, null);        
+        context.getPackageManager().installPackage(contentUri, new InstallObserver(context),
+                PackageManager.INSTALL_REPLACE_EXISTING, null);
     }
     
     static class InstallObserver extends IPackageInstallObserver.Stub {
@@ -24,10 +41,13 @@ public class UpdateMarketReceiver extends BroadcastReceiver {
         }
         
         public void packageInstalled(String packageName, int returnCode) {
-            if (returnCode != 1) {
-                Log.w("UpdateMarketReceiver", new StringBuilder().append(
-                            "Failed to install package ").append(packageName).append(
-                                " with return code: ").append(returnCode).toString());
+            if (returnCode != PackageManager.INSTALL_SUCCEEDED) {
+                Log.w("UpdateMarketReceiver", new StringBuilder()
+                        .append("Failed to install package ")
+                        .append(packageName)
+                        .append(" with return code: ")
+                        .append(returnCode)
+                        .toString());
 
                 if ("com.android.vending".equals(packageName)) {
                     Intent failureIntent = new Intent("com.android.vending.UPDATE_MARKET_FAILURE");
